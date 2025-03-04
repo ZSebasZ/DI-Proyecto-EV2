@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare, faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import FormularioTareas from './FormularioTareas';
-const Tarea = ({tarea, actualizarTarea, eliminarTarea, marcarTareaCompletada }) => {
+const Tarea = ({ tarea, dispatch }) => {
 
     const [modoEdicion, setModoEdicion] = useState(false)
 
@@ -11,34 +11,35 @@ const Tarea = ({tarea, actualizarTarea, eliminarTarea, marcarTareaCompletada }) 
         setModoEdicion(!modoEdicion)
     }
 
+    return (
+        <>
+            <div className={modoEdicion ? "tareaEditable" : "tarea"}>
+                <button className='botones btnCheck' onClick={() => dispatch({ tipo: "MARCAR_COMPLETADA", tarea: tarea.id })}>
+                    <FontAwesomeIcon icon={tarea.completada ? faSquareCheck : faSquare} />
+                </button>
 
-
-    return ( 
-            <>
-                <div className={modoEdicion === false ? "tarea" : "tareaEditable"}>
-                    {tarea.completada === true ? (
-                        <>
-                            <button className='botones btnCheck' onClick={() => {marcarTareaCompletada(tarea.id)}}><FontAwesomeIcon icon={faSquareCheck} /></button>
-                        </>
-                    ): (
-                        <>
-                            <button className='botones btnCheck' onClick={() => {marcarTareaCompletada(tarea.id)}}><FontAwesomeIcon icon={faSquare} /></button>
-                        </>
-                    )}
-                    {modoEdicion === false ? (
-                        <>
-                            <p>{tarea.texto}</p>
-                            <FormularioTareas mostrarFormEdicion={mostrarFormEdicion} modoEdicion={modoEdicion} tareaId={tarea.id} eliminarTarea={eliminarTarea}/>
-                        </>
-                    ) : (
-                        <>
-                            <FormularioTareas mostrarFormEdicion={mostrarFormEdicion} modoEdicion={modoEdicion} tareaEdicion={tarea.texto} tareaId={tarea.id} actualizarTarea={actualizarTarea} eliminarTarea={eliminarTarea}/>
-                        </>
-                    )}
-                    
-                </div>
-            </>
-        )
+                {modoEdicion ? (
+                    <FormularioTareas
+                        mostrarFormEdicion={mostrarFormEdicion}
+                        modoEdicion={modoEdicion}
+                        tareaEdicion={tarea.texto}
+                        tareaId={tarea.id}
+                        dispatch={dispatch}
+                    />
+                ) : (
+                    <>
+                        <p>{tarea.texto}</p>
+                        <FormularioTareas
+                            mostrarFormEdicion={mostrarFormEdicion}
+                            modoEdicion={modoEdicion}
+                            tareaId={tarea.id}
+                            dispatch={dispatch}
+                        />
+                    </>
+                )}
+            </div>
+        </>
+    )
 }
- 
+
 export default Tarea;

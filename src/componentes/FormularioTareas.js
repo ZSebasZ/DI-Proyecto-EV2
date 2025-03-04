@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquarePlus, faPenToSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-const FormularioTareas = ({ esNueva, agregarTarea, mostrarFormEdicion, modoEdicion, tareaEdicion, tareaId, actualizarTarea, eliminarTarea }) => {
+const FormularioTareas = ({ esNueva, mostrarFormEdicion, modoEdicion, tareaEdicion, tareaId, dispatch }) => {
 
     const [tarea, setTarea] = useState(tareaEdicion || "");
     const [contadorTareas, setContadorTareas] = useState(1);
-    const inputRef = useRef(null); // 🔹 Creamos una referencia al input
+    const inputRef = useRef(null); // Creamos una referencia al input
 
-    // 🔹 Usamos useEffect para dar el foco cuando modoEdicion cambia a true
+    // Usamos useEffect para dar el foco cuando modoEdicion cambia a true
     useEffect(() => {
         if (modoEdicion) {
             setTimeout(() => {
@@ -20,13 +20,13 @@ const FormularioTareas = ({ esNueva, agregarTarea, mostrarFormEdicion, modoEdici
     const onSubmit = (e) => {
         e.preventDefault();
         if (tareaId === undefined) {
-            if (tarea.trim()) {
-                agregarTarea({ id: contadorTareas, texto: tarea, completada: false });
+            if (tarea.trim()) {                
+                dispatch({ tipo: "AGREGAR_TAREA", tarea: {id: contadorTareas, texto: tarea, completada: false} })
                 setContadorTareas(contadorTareas + 1);
                 setTarea("");
             }
         } else {
-            actualizarTarea(tareaId, tarea);
+            dispatch({ tipo: "ACTUALIZAR_TAREA", tarea: { id: tareaId, texto: tarea } });
             mostrarFormEdicion();
         }
     };
@@ -44,7 +44,9 @@ const FormularioTareas = ({ esNueva, agregarTarea, mostrarFormEdicion, modoEdici
                             value={tarea}
                             onChange={(e) => setTarea(e.target.value)}
                         />
-                        <button type='submit'><FontAwesomeIcon icon={faSquarePlus} /></button>
+                        <button type='submit'>
+                            <FontAwesomeIcon icon={faSquarePlus} />
+                        </button>
                     </div>
                 ) : (
                     <div className='tareaForm'>
@@ -52,7 +54,7 @@ const FormularioTareas = ({ esNueva, agregarTarea, mostrarFormEdicion, modoEdici
                             {modoEdicion === true ? (
                                 <>
                                     <input
-                                        ref={inputRef} // 🔹 Asignamos la referencia aquí
+                                        ref={inputRef} // Asignamos la referencia aquí
                                         id={tarea + tareaId}
                                         value={tarea}
                                         onChange={(e) => setTarea(e.target.value)}
@@ -60,14 +62,10 @@ const FormularioTareas = ({ esNueva, agregarTarea, mostrarFormEdicion, modoEdici
                                     <button type='submit' className='botones btnActualizar'>Actualizar</button>
                                 </>
                             ) : null}
-                            <button
-                                type='button'
-                                className='botones btnIconoEditar'
-                                onClick={mostrarFormEdicion} // Solo cambiamos el estado
-                            >
+                            <button type='button' className='botones btnIconoEditar' onClick={mostrarFormEdicion}>
                                 <FontAwesomeIcon icon={faPenToSquare} />
                             </button>
-                            <button type='button' className='botones btnIconoEliminar' onClick={() => eliminarTarea(tareaId)}>
+                            <button type='button' className='botones btnIconoEliminar' onClick={() => dispatch({ tipo: "ELIMINAR_TAREA", tarea: tareaId })}>
                                 <FontAwesomeIcon icon={faXmark} />
                             </button>
                         </>

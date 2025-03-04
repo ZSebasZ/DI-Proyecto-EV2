@@ -1,7 +1,7 @@
 import React from 'react';
 import Tarea from './Tarea';
 
-const ListaTareas = ({ tareas, filtro, actualizarTarea, eliminarTarea, marcarTareaCompletada }) => {
+const ListaTareas = ({ tareas, filtro, dispatch }) => {
     const tareasFiltradas = filtro ? tareas.filter((tarea) => tarea.completada === false) : tareas;
 
     return (
@@ -10,9 +10,7 @@ const ListaTareas = ({ tareas, filtro, actualizarTarea, eliminarTarea, marcarTar
                 <Tarea 
                     key={tarea.id} 
                     tarea={tarea} 
-                    actualizarTarea={actualizarTarea} 
-                    eliminarTarea={eliminarTarea} 
-                    marcarTareaCompletada={marcarTareaCompletada}
+                    dispatch={dispatch}
                 />
             ))}
         </div>
