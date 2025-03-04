@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 //Importamos el componente FontAwesomeIcon y el icono especifico que vamos a usa
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
+import { faSquare, faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import FormularioTareas from './FormularioTareas';
-const Tarea = ({tarea}) => {
+const Tarea = ({tarea, actualizarTarea, eliminarTarea, marcarTareaCompletada }) => {
 
     const [modoEdicion, setModoEdicion] = useState(false)
 
@@ -11,19 +11,28 @@ const Tarea = ({tarea}) => {
         setModoEdicion(!modoEdicion)
     }
 
+
+
     return ( 
             <>
-                <div className='tarea'>
-                    <button><FontAwesomeIcon icon={faSquare} /></button>
+                <div className={modoEdicion === false ? "tarea" : "tareaEditable"}>
+                    {tarea.completada === true ? (
+                        <>
+                            <button className='botones btnCheck' onClick={() => {marcarTareaCompletada(tarea.id)}}><FontAwesomeIcon icon={faSquareCheck} /></button>
+                        </>
+                    ): (
+                        <>
+                            <button className='botones btnCheck' onClick={() => {marcarTareaCompletada(tarea.id)}}><FontAwesomeIcon icon={faSquare} /></button>
+                        </>
+                    )}
                     {modoEdicion === false ? (
                         <>
                             <p>{tarea.texto}</p>
-                            <FormularioTareas mostrarFormEdicion={mostrarFormEdicion}/>
+                            <FormularioTareas mostrarFormEdicion={mostrarFormEdicion} modoEdicion={modoEdicion} tareaId={tarea.id} eliminarTarea={eliminarTarea}/>
                         </>
                     ) : (
                         <>
-                            <p>{tarea.texto} ooooo</p>
-                            <FormularioTareas mostrarFormEdicion={mostrarFormEdicion}/>
+                            <FormularioTareas mostrarFormEdicion={mostrarFormEdicion} modoEdicion={modoEdicion} tareaEdicion={tarea.texto} tareaId={tarea.id} actualizarTarea={actualizarTarea} eliminarTarea={eliminarTarea}/>
                         </>
                     )}
                     
