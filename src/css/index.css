@@ -235,3 +235,9 @@ body {
     color: red;
 }
 
+.containerNoTareas {
+    padding: 0.8rem;
+    text-align: center;
+    color: rgb(149, 149, 149);
+}
+
